@@ -1,3 +1,4 @@
+from audios.yt import *
 from original import *
 import shutil, glob
 from easyfuncs import download_from_url, CachedModels
@@ -32,6 +33,8 @@ with gr.Blocks(title="🔊",theme=gr.themes.Base(primary_hue="rose",neutral_hue=
                         dropbox = gr.File(label="Drop your audio here & hit the Reload button.")
                     with gr.Row():
                         record_button=gr.Audio(source="microphone", label="OR Record audio.", type="filepath")
+                        with gr.Row():
+                        yt_link_col=gr.Text(label="download youtube audio")
                     with gr.Row():
                         paths_for_files = lambda path:[os.path.abspath(os.path.join(path, f)) for f in os.listdir(path) if os.path.splitext(f)[1].lower() in ('.mp3', '.wav', '.flac', '.ogg')]
                         input_audio0 = gr.Dropdown(
