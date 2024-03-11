@@ -206,7 +206,6 @@ with gr.Blocks(title="🔊",theme=gr.themes.Soft(primary_hue="green",neutral_hue
                     api_name="infer_change_voice",
                 )
         with gr.TabItem("Youtube"):
-        gr.Markdown("## Convert video Youtube to audio")
            with gr.Row():
                 yt_url = gr.Textbox(label="URL to video", value="",placeholder="https://youtu.be/iN0-dRNsmRM?si=42PgawH73GIrvYLs", scale=6)
                 yt_btn = gr.Button(value="Convert",scale=2)
