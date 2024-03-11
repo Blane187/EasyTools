@@ -1,9 +1,47 @@
-from audios.yt import *
 from original import *
 import shutil, glob
+import pytube
+import os
+from pydub import AudioSegment
+# from audio_enhance.functions import audio_enhance
 from easyfuncs import download_from_url, CachedModels
 os.makedirs("dataset",exist_ok=True)
 model_library = CachedModels()
+
+def convert_yt_to_wav(url):
+    if not url:
+        return "First, introduce the video link", None
+    
+    try:
+        print(f"Converting video {url}...")
+        # Descargar el video utilizando pytube
+        video = pytube.YouTube(url)
+        stream = video.streams.filter(only_audio=True).first()
+        video_output_folder = os.path.join(f"yt_videos")  # Ruta de destino de la carpeta
+        audio_output_folder = 'audios'
+
+        print("Downloading video")
+        video_file_path = stream.download(output_path=video_output_folder)
+        print(video_file_path)
+
+        file_name = os.path.basename(video_file_path)
+        
+        audio_file_path = os.path.join(audio_output_folder, file_name.replace('.mp4','.wav'))
+        # convert mp4 to wav
+        print("Converting to wav")
+        sound = AudioSegment.from_file(video_file_path,format="mp4")
+        sound.export(audio_file_path, format="wav")
+        
+        if os.path.exists(video_file_path):
+            os.remove(video_file_path)
+            
+        return "Success", audio_file_path
+    except ConnectionResetError as cre:
+        return "The connection has been lost, please reload or try again later.", None
+    except Exception as e:
+        return str(e), None
+    
+
 
 with gr.Blocks(title="🔊",theme=gr.themes.Soft(primary_hue="green",neutral_hue="zinc")) as app:
     with gr.Row():
@@ -166,6 +204,17 @@ with gr.Blocks(title="🔊",theme=gr.themes.Soft(primary_hue="green",neutral_hue
                     inputs=[voice_model, protect0, protect0],
                     outputs=[spk_item, protect0, protect0, file_index2, file_index2],
                     api_name="infer_change_voice",
+                )
+        with gr.TabItem("Youtube"):
+        gr.Markdown("## Convert video Youtube to audio")
+           with gr.Row():
+                yt_url = gr.Textbox(label="URL to video", value="",placeholder="https://youtu.be/iN0-dRNsmRM?si=42PgawH73GIrvYLs", scale=6)
+                yt_btn = gr.Button(value="Convert",scale=2)
+                yt_output2= gr.Audio(label="Output Audio")   
+                yt_btn.click(
+                    inputs=[yt_url],
+                    outputs=[yt_output2],
+                    fn=convert_yt_to_wav,
                 )
         with gr.TabItem("Download Models"):
             with gr.Row():
