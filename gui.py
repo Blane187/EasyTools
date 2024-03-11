@@ -5,7 +5,7 @@ from easyfuncs import download_from_url, CachedModels
 os.makedirs("dataset",exist_ok=True)
 model_library = CachedModels()
 
-with gr.Blocks(title="🔊",theme=gr.themes.Base(primary_hue="rose",neutral_hue="zinc")) as app:
+with gr.Blocks(title="🔊",theme=gr.themes.Soft(primary_hue="green",neutral_hue="zinc")) as app:
     with gr.Row():
         gr.HTML("<img  src='file/a.png' alt='image'>")
     with gr.Tabs():
@@ -145,6 +145,7 @@ with gr.Blocks(title="🔊",theme=gr.themes.Base(primary_hue="rose",neutral_hue=
                     vc.vc_single,  
                     [
                         spk_item,
+                        is_webui,
                         input_audio0,
                         vc_transform0,
                         f0_file,
